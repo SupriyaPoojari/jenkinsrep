@@ -1,32 +1,39 @@
 pipeline {
     agent any
-    triggers {
-        cron('H 2 * * *')
-    }
+
     stages {
-        stage('Checkout') {
+        stage('Fetch File from my repo') {
             steps {
-                checkout scm
+                git branch: 'main', url: 'https://github.com/SupriyaPoojari/jenkinsrep.git'
+            }
+            
+        }
+        stage('build my file'){
+            steps {
+                echo 'Build Project'
+                bat 'javac jen.java'
+               
             }
         }
-        stage('Build') {
+        stage('Execute'){
             steps {
-                echo "Building project..."
+                echo 'Executingg'
+                bat 'java jen'
             }
         }
-        stage('Test') {
+        stage('Deploy'){
             steps {
-                echo "Testing ..."
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo "Deploying application..."
+                echo 'Deploying'
+               
             }
         }
     }
-    post {
-        always {
-            echo "Pipeline completed."
+    post{
+        success{
+            echo 'pipeline successful'
         }
-    }}
+        failure{
+            echo 'pipeline failed'
+        }
+    }
+}
